@@ -10,8 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-
-import java.security.PublicKey;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -26,30 +24,27 @@ public class ProductService {
     @PostConstruct
     public void initDB() {
         List<Product> products = IntStream.rangeClosed(1, 200)
-                .mapToObj(i ->  new Product("product - " + i, new Random().nextInt(100), new Random().nextInt(50000)))
+                .mapToObj(i -> new Product("product - " + i, new Random().nextInt(100), new Random().nextInt(50000)))
                 .collect(Collectors.toList());
         repository.saveAll(products);
     }
-
 
     public List<Product> findAllProducts() {
         return repository.findAll();
     }
 
-
-    public List<Product> findProductsWithSorting(String field){
-        return  repository.findAll(Sort.by(Sort.Direction.ASC,field));
+    public List<Product> findProductsWithSorting(String field) {
+        return repository.findAll(Sort.by(Sort.Direction.ASC, field));
     }
 
-
-    public Page<Product> findProductsWithPagination(int offset,int pageSize){
+    public Page<Product> findProductsWithPagination(int offset, int pageSize) {
         Page<Product> products = repository.findAll(PageRequest.of(offset, pageSize));
-        return  products;
+        return products;
     }
 
-    public Page<Product> findProductsWithPaginationAndSorting(int offset,int pageSize,String field){
-        Page<Product> products = repository.findAll(PageRequest.of(offset, pageSize).withSort(Sort.by(field)));
-        return  products;
+    public Page<Product> findProductsWithPaginationAndSorting(int offset, int pageSize, String field) {
+        Page<Product> products = repository.findAll(PageRequest.of(offset, pageSize, Sort.by(Sort.Direction.ASC, field)));
+        return products;
     }
 
 }
